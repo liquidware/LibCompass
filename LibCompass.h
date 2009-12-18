@@ -1,9 +1,9 @@
 /*
   LibCompass - A Compass Library for the Arduino.
- 
+
   Supported compass modules:
     HMC6352 Compass Module - http://moderndevice.com/products/hmc6352-breakout-compass-sensor
- 
+
   Created by Christopher Ladden from Modern Device on December 2009.
 
   This library is free software; you can redistribute it and/or
@@ -29,12 +29,14 @@
 class LibCompass
 {
   private:
-    uint8_t pinList[4];
+    /* Nothing */
 
   public:
     LibCompass(uint8_t CompassType);
-    int GetHeading(void);
+    float GetHeading(void);
     bool Calibrate(void);
+    void Wake(void);
+    void Sleep(void);
 };
 
 #endif
