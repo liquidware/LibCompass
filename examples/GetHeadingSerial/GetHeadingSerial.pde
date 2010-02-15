@@ -22,15 +22,11 @@ int x;
 void loop() {
 
  /* Print the heading to the PC */
- for (x=0; x< 500; x++) {
-   Serial.print("Heading: ");
-   Serial.print(compass.GetHeading());
-   Serial.println(" degrees");
-   delay(10);
- }
+ Serial.print("Heading: ");
 
- // Calibrate the sensor using two full rotations
- // Watch the serial port for instructions
- compass.Calibrate();
+ Serial.print(compass.GetHeading());  //print the compass heading
 
+ Serial.println(" degrees");
+
+ delay(10);
 }

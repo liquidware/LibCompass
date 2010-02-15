@@ -86,6 +86,7 @@ float LibCompass::GetHeading(void) {
  **********************************************************/
 bool LibCompass::Calibrate(void) {
     char out[100];
+    char inChar;
 
     Serial.begin(9600);
 
@@ -95,41 +96,56 @@ bool LibCompass::Calibrate(void) {
     strcpy_P(out, PSTR("You'll need to rotate the sensor 720 degrees"));
     Serial.println(out);
 
-    strcpy_P(out, PSTR("Send any Serial Character to begin"));
+    strcpy_P(out, PSTR("Send a 'C' to begin or 'Q' to quit"));
     Serial.println(out);
 
     //wait for a character
-    while(!Serial.available()) {
-        ;
+    while(1) {
+        if(Serial.available()) {
+            if (Serial.read() == 'C')  {
+                //Calibrate!
+                strcpy_P(out, PSTR("Start rotating..."));
+                Serial.println(out);
+                break;
+            } else {
+                //Don't Calibrate
+                strcpy_P(out, PSTR("Quiting."));
+                Serial.println(out);
+                delay(3000);
+                return false;
+            }
+        }
     }
-
-    //read the character
-    Serial.read();
 
     //Enter Cal mode
     Wire.beginTransmission(hmc6352_Address);
     Wire.send(hmc6352_EnterCal);
     Wire.endTransmission();
 
-    strcpy_P(out, PSTR("Calibrating..."));
+    delay(3000); //give them some time
+
+    strcpy_P(out, PSTR("Send a 'E' character when finished"));
     Serial.println(out);
 
-    Serial.println("Send any Serial Character to finish");
-
     //wait for a character
-    while(!Serial.available()) {
-        ;
+    while(1) {
+        if(Serial.available()) {
+            if (Serial.read() == 'E') {
+                break;
+            }
+        }
     }
-
-    //read the character
-    Serial.read();
 
     //Exit Cal Mode
     Wire.beginTransmission(hmc6352_Address);
     Wire.send(hmc6352_ExitCal);
     Wire.endTransmission();
 
-    Serial.print("Cal Complete");
+    strcpy_P(out, PSTR("Done."));
+    Serial.println(out);
+    delay(3000);
+
+    return true;
 }
 
 /**********************************************************
@@ -137,8 +153,8 @@ bool LibCompass::Calibrate(void) {
  *  Send the sleep command to the Compass
  **********************************************************/
 void LibCompass::Sleep(void) {
-    Wire.beginTransmission(0x21);
-    Wire.send(0x53); //S enter sleep mode
+    Wire.beginTransmission(hmc6352_Address);
+    Wire.send(hmc6352_Sleep); //S enter sleep mode
     Wire.endTransmission();
 }
 
@@ -147,8 +163,8 @@ void LibCompass::Sleep(void) {
  *  Send the wakeup command to the Compass.
  **********************************************************/
 void LibCompass::Wake(void) {
-    Wire.beginTransmission(0x21);
-    Wire.send(0x57); //W wake up exit sleep mode
+    Wire.beginTransmission(hmc6352_Address);
+    Wire.send(hmc6352_Wakeup); //W wake up exit sleep mode
     Wire.endTransmission();
 }
 
