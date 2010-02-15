@@ -37,6 +37,12 @@
  * @param CompassType - The type of compass ex. HMC6352
  **********************************************************/
 LibCompass::LibCompass(uint8_t CompassType) {
+
+    pinMode(16, OUTPUT);
+    digitalWrite(16, LOW);  //GND pin
+    pinMode(17, OUTPUT);
+    digitalWrite(17, HIGH); //VCC pin
+
     Wire.begin();
 }
 
