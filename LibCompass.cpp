@@ -62,7 +62,7 @@ float LibCompass::GetHeading(void) {
     int16_t frac;
 
     Wire.beginTransmission(0x21);
-    Wire.send(0x41); //A
+    Wire.send('A');
     Wire.endTransmission();
     delay(8); //6000 microseconds minimum 6 ms
 
