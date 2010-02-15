@@ -26,6 +26,22 @@
 
 #include <inttypes.h>
 
+//Commpass Address and Commands from the HMC6352 datasheet
+typedef enum {
+    hmc6352_Address      = 0x21,
+    hmc6352_WriteEEPROM  = 'w',
+    hmc6352_ReadEEPROM   = 'r',
+    hmc6352_WriteRAM     = 'G',
+    hmc6352_ReadRAM      = 'g',
+    hmc6352_Sleep        = 'S',
+    hmc6352_Wakeup       = 'W',
+    hmc6352_BridgeOffset = 'O',
+    hmc6352_EnterCal     = 'C',
+    hmc6352_ExitCal      = 'E',
+    hmc6352_SaveOPMode   = 'L',
+    hmc6352_GetData      = 'A',
+} HMC6352_SENSOR_T;
+
 class LibCompass
 {
   private:

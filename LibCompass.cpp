@@ -24,6 +24,8 @@
 #include <inttypes.h>
 #include <Wire.h>
 #include <wiring.h>
+#include <avr/pgmspace.h>
+#include "HardwareSerial.h"
 #include "LibCompass.h"
 
 /******************************************************************************
@@ -61,12 +63,12 @@ float LibCompass::GetHeading(void) {
     uint8_t data[2];
     int16_t frac;
 
-    Wire.beginTransmission(0x21);
-    Wire.send('A');
+    Wire.beginTransmission(hmc6352_Address);
+    Wire.send(hmc6352_GetData);
     Wire.endTransmission();
     delay(8); //6000 microseconds minimum 6 ms
 
-    Wire.requestFrom(0x21, 2);
+    Wire.requestFrom(hmc6352_Address, 2);
     while(Wire.available() && (j < 2) ) {
         data[j] = Wire.receive();
         j++;
@@ -83,7 +85,51 @@ float LibCompass::GetHeading(void) {
  * @return bool - The calibration result
  **********************************************************/
 bool LibCompass::Calibrate(void) {
-    ; //TODO
+    char out[100];
+
+    Serial.begin(9600);
+
+    strcpy_P(out, PSTR("Calibration Mode."));
+    Serial.println(out);
+
+    strcpy_P(out, PSTR("You'll need to rotate the sensor 720 degrees"));
+    Serial.println(out);
+
+    strcpy_P(out, PSTR("Send any Serial Character to begin"));
+    Serial.println(out);
+
+    //wait for a character
+    while(!Serial.available()) {
+        ;
+    }
+
+    //read the character
+    Serial.read();
+
+    //Enter Cal mode
+    Wire.beginTransmission(hmc6352_Address);
+    Wire.send(hmc6352_EnterCal);
+    Wire.endTransmission();
+
+    strcpy_P(out, PSTR("Calibrating..."));
+    Serial.println(out);
+
+    Serial.println("Send any Serial Character to finish");
+
+    //wait for a character
+    while(!Serial.available()) {
+        ;
+    }
+
+    //read the character
+    Serial.read();
+
+    //Exit Cal Mode
+    Wire.beginTransmission(hmc6352_Address);
+    Wire.send(hmc6352_ExitCal);
+    Wire.endTransmission();
+
+    Serial.print("Cal Complete");
 }
 
 /**********************************************************
