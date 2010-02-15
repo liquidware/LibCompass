@@ -18,6 +18,8 @@ void setup() {
 
 void loop() {
  /* Print the heading to the PC */
- Serial.println(compass.GetHeading());
+ Serial.print("Heading: ");
+ Serial.print(compass.GetHeading());
+ Serial.println(" degrees");
  delay(10);
 }
