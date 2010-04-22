@@ -1,0 +1,16 @@
+LibCompass
+===========
+
+A fully integrated compass module that combines the Honeywell HMC6352 2-axis magneto-resistive sensors with the required analog and digital support circuits, microprocessor and algorithms for heading computation. 
+
+!http://www0.liquidware.com/system/0000/3041/Compass_Assembled_small.jpg?1270956934!
+
+Features:
+* Hardware abstraction routines
+* Heading Calculation
+* Interactive Magnetic Calibration
+
+Suppported Compasses
+==================
+
+This library is for the Liquidware & Modern Device compass sensor module. 
