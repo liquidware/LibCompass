@@ -26,7 +26,13 @@
 
 #include <inttypes.h>
 
-//Commpass Address and Commands from the HMC6352 datasheet
+//Compass Hardware Types - used for configuring the device
+typedef enum {
+   COMPASS_HW_LIQUIDWARE_COMPASS  = 0, //http://www.liquidware.com/shop/show/SEN-CMP/Compass+Module
+   COMPASS_HW_GEOSHIELD           = 1,
+} COMPASS_HW_T;
+
+//Compass Address and Commands from the HMC6352 datasheet
 typedef enum {
     hmc6352_Address      = 0x21,
     hmc6352_WriteEEPROM  = 'w',
@@ -45,7 +51,7 @@ typedef enum {
 class LibCompass
 {
   private:
-    /* Nothing */
+    /* nothing */
 
   public:
     LibCompass(uint8_t CompassType);

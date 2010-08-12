@@ -3,8 +3,7 @@
  *  An example sketch that prints the
  *  compass heading to the PC's serial port
  *
- *  Tested with the HMC6352 Compass
- *  from Modern Device
+ *  Tested with the Liquidware Compass Module - http://www.liquidware.com/shop/show/SEN-CMP/Compass+Module
  *****************************/
 #include <Wire.h>
 #include <LibCompass.h>

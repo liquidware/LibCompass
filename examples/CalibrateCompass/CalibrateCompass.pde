@@ -3,8 +3,7 @@
  *  An example sketch that calibrates the
  *  compass sensor for magnetic field fluctuations.
  *
- *  Tested with the HMC6352 Compass
- *  from Modern Device @ www.moderndevice.com
+ *  Tested with the Liquidware Compass Module - http://www.liquidware.com/shop/show/SEN-CMP/Compass+Module
  *****************************/
 #include <Wire.h>
 #include <LibCompass.h>

@@ -1,8 +1,9 @@
 /*
-  LibCompass - A Compass Library for Arduino.
+  LibCompass - A Compass Library for Arduino
 
   Supported compass modules:
-    HMC6352 Compass Module - http://moderndevice.com/products/hmc6352-breakout-compass-sensor
+    Liquidware Compass Module - http://www.liquidware.com/shop/show/SEN-CMP/Compass+Module
+    Liquidware GeoShield Module - http://www.liquidware.com/category/Sensors
 
   Created by Christopher Ladden at Modern Device on December 2009.
 
@@ -21,12 +22,21 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+/******************************************************************************
+ * Includes
+ ******************************************************************************/
+
 #include <inttypes.h>
 #include <Wire.h>
 #include <wiring.h>
 #include <avr/pgmspace.h>
 #include "HardwareSerial.h"
 #include "LibCompass.h"
+
+/******************************************************************************
+ * Definitions
+ ******************************************************************************/
+#define COMPASS_READ_TIMEOUT 100
 
 /******************************************************************************
  * Constructors
@@ -40,10 +50,12 @@
  **********************************************************/
 LibCompass::LibCompass(uint8_t CompassType) {
 
-    pinMode(16, OUTPUT);
-    digitalWrite(16, LOW);  //GND pin
-    pinMode(17, OUTPUT);
-    digitalWrite(17, HIGH); //VCC pin
+    if(CompassType == (uint8_t)COMPASS_HW_LIQUIDWARE_COMPASS) {
+        pinMode(16, OUTPUT);
+        digitalWrite(16, LOW);  //GND pin
+        pinMode(17, OUTPUT);
+        digitalWrite(17, HIGH); //VCC pin
+    }
 
     Wire.begin();
 }
@@ -62,16 +74,23 @@ float LibCompass::GetHeading(void) {
     uint8_t j = 0;
     uint8_t data[2];
     int16_t frac;
+    long counter;
 
     Wire.beginTransmission(hmc6352_Address);
     Wire.send(hmc6352_GetData);
     Wire.endTransmission();
     delay(8); //6000 microseconds minimum 6 ms
 
+    counter = millis();
     Wire.requestFrom(hmc6352_Address, 2);
     while(Wire.available() && (j < 2) ) {
         data[j] = Wire.receive();
         j++;
+
+        //Timeout check
+        if ((millis() - counter) > COMPASS_READ_TIMEOUT) {
+          return -1; //timeout
+        }
     }
     frac = data[0]*256 + data[1];
 
